@@ -52,6 +52,7 @@ class Product(models.Model):
     image = models.ImageField(
         upload_to='images/', default='images/600_900.png')
     price = models.PositiveIntegerField(default=0)
+    quantity = models.IntegerField(default=1)
     wieght = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     in_stock = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)

@@ -34,4 +34,7 @@ def brand_list(request, brand_slug=None):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, in_stock=True)
-    return render(request, 'store/products/detail.html', {'product': product})
+    quantity = []
+    for q in range(1, product.quantity+1):
+        quantity.append(q)
+    return render(request, 'store/products/detail.html', {'product': product, 'quantity': quantity})
