@@ -1,12 +1,14 @@
 from django.db import models
-from django.db.models.enums import Choices
-from django.db.models.fields import IntegerField
 from store.models import Product
+from django.utils.translation import gettext_lazy as _
 
 
 class Cart(models.Model):
     cart_id = models.CharField(max_length=255, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(
+        _("Created At"),
+        auto_now_add=True,
+    )
 
 
 class CartItem(models.Model):

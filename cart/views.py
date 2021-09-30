@@ -1,7 +1,8 @@
 from django.http.response import HttpResponseRedirect
 from store.models import Product
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import F
 
 from .models import Cart, CartItem
 
@@ -46,14 +47,14 @@ def add_to_cart(request, product_id):
     try:
         cart_item = CartItem.objects.get(
             cart=cart, product=product)
-        cart_item.quantity += 1
+        cart_item.quantity = F('quantity') + 1
         cart_item.save()
+        cart_item.refresh_from_db()
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(
             cart=cart, product=product, quantity=1)
         cart_item.save()
-    # return HttpResponse(cart_item.product)
-    messages.warning(request, 'Successfully added to cart')
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -62,11 +63,12 @@ def remove_from_cart(request, product_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     cart_item = CartItem.objects.get(product=product, cart=cart)
     if cart_item.quantity > 1:
-        cart_item.quantity -= 1
+        cart_item.quantity = F('quantity') - 1
         cart_item.save()
+        cart_item.refresh_from_db()
     else:
         cart_item.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('cart:cart_detail')
 
 
 def remove_item(request, product_id):
@@ -74,4 +76,4 @@ def remove_item(request, product_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     cart_item = CartItem.objects.get(product=product, cart=cart)
     cart_item.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('cart:cart_detail')
