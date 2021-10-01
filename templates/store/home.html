@@ -7,7 +7,7 @@
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">My shop</h1>
+            <h1 class="display-4 fw-bolder">Flukore</h1>
             <p class="lead fw-normal text-white-50 mb-0">A Home For Genuity</p>
         </div>
     </div>
@@ -15,6 +15,21 @@
 
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
+        {% if messages %}
+        <div class="d-flex-center">
+            <div class="text-center">
+                <div class="alert alert-success" role="alert">
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div class="pb-3 h5">All Products</div>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for product in products %}
@@ -26,7 +41,9 @@
                     <div class="card-body p-4">
                         <div class="text-dark text-decoration-none">
                             <!-- Product name-->
-                            <h5 class="fw-bolder">{{ product.title }}</h5>
+                            <a href="{{ product.get_absolute_url }}" class="text-dark text-decoration-none">
+                                <h5 class="fw-bolder">{{ product.title }}</h5>
+                            </a>
                             <!-- Product price-->
                             <div class="d-flex justify-content-between align-items-center">
                                 <small class="text-muted">BDT. {{ product.price }}</small>
@@ -41,13 +58,6 @@
                                     class="bi bi-heart-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd"
                                         d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-                                </svg>
-                            </a>
-                            <a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
                                 </svg>
                             </a>
                             {% if product.quantity < 1 %}

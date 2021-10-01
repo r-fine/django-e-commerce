@@ -4,7 +4,22 @@
 
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
-        <div class="pb-3 h5">All {{brand.name|title}}</div>
+        {% if messages %}
+        <div class="d-flex-center">
+            <div class="text-center">
+                <div class="alert alert-success" role="alert">
+
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="pb-3 h5">Brand- {{brand.name|title}}</div>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for product in products %}
             <div class="col mb-5">
@@ -15,7 +30,9 @@
                     <div class="card-body p-4">
                         <div class="text-dark text-decoration-none">
                             <!-- Product name-->
-                            <h5 class="fw-bolder">{{ product.title }}</h5>
+                            <a href="{{ product.get_absolute_url }}" class="text-dark text-decoration-none">
+                                <h5 class="fw-bolder">{{ product.title }}</h5>
+                            </a>
                             <!-- Product price-->
                             <div class="d-flex justify-content-between align-items-center">
                                 <small class="text-muted">BDT. {{ product.price }}</small>
@@ -32,21 +49,27 @@
                                         d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
                                 </svg>
                             </a>
-                            <a class="btn btn-outline-dark mt-auto" href="{{ product.get_absolute_url }}">
+                            {% if product.quantity < 1 %}
+                            <button class="btn btn-outline-danger mt-auto" style="pointer-events: none;" type="button"
+                                disabled>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-info-circle" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                    class="bi bi-cart-x" viewBox="0 0 16 16">
                                     <path
-                                        d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                        d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z" />
+                                    <path
+                                        d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
                                 </svg>
-                            </a>
-                            <a href="{% url "cart:add_to_cart" product.id %}" class="btn btn-outline-dark mt-auto" href="#">
+                            </button>
+                            {% else %}
+                            <a href="{% url "cart:add_to_cart" product.id %}" class="btn btn-outline-dark mt-auto"
+                                href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-cart-plus-fill" viewBox="0 0 16 16">
                                     <path
                                         d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z" />
                                 </svg>
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
