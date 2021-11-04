@@ -1,0 +1,115 @@
+{% extends "store/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+{% block head %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-conten padding-y" style="min-height:84vh">
+    <div class="card mx-auto" style="max-width: 425px; margin-top:100px;">
+        <div class="card-body">
+            {% block allauth_extra %}
+            {% if messages %}
+            <div>
+                <strong>Messages:</strong>
+                <ul>
+                    {% for message in messages %}
+                    <li>{{message}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% endblock %}
+            <h1 class="text-center">{% trans "Sign In" %}</h1>
+
+            {% get_providers as socialaccount_providers %}
+
+            {% if socialaccount_providers %}
+
+            <div class="row justify-content-md-center">
+
+                <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-sm btn-block" role="button"
+                    aria-pressed="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-google" viewBox="0 0 16 16">
+                        <path
+                            d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
+                    </svg>
+                    | Sign in with Google</a>
+
+                <div class="login-or text-center"><strong>{% trans 'or' %}</strong></div>
+
+            </div>
+
+            {% include "socialaccount/snippets/login_extra.html" %}
+
+            {% else %}
+            <p>{% blocktrans %}If you have not created an account yet, then please
+                <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+            {% endif %}
+
+            <form class="login" method="POST" action="{% url 'account_login' %}">
+
+                {% csrf_token %}
+                {{ form|crispy }}
+                <!--{% if form.errors %}-->
+                <!--{% for field in form %}-->
+                <!--{% for error in field.errors %}-->
+                <!--<div class="alert alert-error">-->
+                <!--    <strong>{{ error|escape }}</strong>-->
+                <!--</div>-->
+                <!--{% endfor %}-->
+                <!--{% endfor %}-->
+                <!--{% for error in form.non_field_errors %}-->
+                <!--<div class="alert alert-danger">-->
+                <!--    <strong>{{ error|escape }}</strong>-->
+                <!--</div>-->
+                <!--{% endfor %}-->
+                <!--{% endif %}-->
+                <!--<div class="form-row">-->
+                <!--    <div class="form-group">-->
+                <!--        {{ form.login|as_crispy_field }}-->
+                <!--    </div>-->
+                <!--</div>-->
+                <!--<div></div>-->
+                <!--<div class="form-row">-->
+                <!--    <div class="form-group" col-md-6"">-->
+                <!--        {{ form.password|as_crispy_field }}-->
+                <!--    </div>-->
+                <!--</div>-->
+                <!--<div></div>-->
+                <!--<div class="form-row">-->
+                <!--    <div class="form-group">-->
+                <!--        {{ form.remember|as_crispy_field }}-->
+                <!--    </div>-->
+                <!--</div>-->
+                <div style="width:10px;height:15px;display:inline-block"></div>
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %}
+                <div class="row justify-content-xs-center">
+                    <button class="btn btn-secondary" type="submit">{% trans "Sign In" %} &raquo;</button>
+                </div>
+                <hr>
+                <div class="text-right">
+                    <a class="button secondaryAction"
+                        href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                </div>
+                <div class="text-left">
+                    Don't have an account? <a href="{{ signup_url }}">Sign up here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

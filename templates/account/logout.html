@@ -1,0 +1,49 @@
+{% extends "store/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% trans "Sign Out" %}{% endblock %}
+{% block head %}
+<style>
+    .asteriskField {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-conten padding-y" style="min-height:84vh">
+<div class="card mx-auto" style="max-width: 425px; margin-top:100px;">
+    <div class="card-body">
+{% block allauth_extra %}
+    {% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+        {% for message in messages %}
+        <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+{% endblock %}
+<h1>{% trans "Sign Out" %}</h1>
+
+<p>{% trans 'Are you sure you want to sign out?' %}</p>
+
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <div style="width:10px;height:15px;display:inline-block"></div>
+  <div class="row justify-content-xs-center">
+  <button class="btn btn-secondary" type="submit">{% trans "Sign Out" %} &raquo;</button>
+  </div>
+</form>
+    </div>
+</div>
+</section>
+
+{% endblock %}
